@@ -10,7 +10,7 @@ namespace PracticeProject.Mapping
         {
             CreateMap<ClientModel, Client>();
             CreateMap<ClientModel, User>();
-            CreateMap<Client, GetAllClientsDTO>()
+            CreateMap<Client, GetClientsDTO>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email));
         }

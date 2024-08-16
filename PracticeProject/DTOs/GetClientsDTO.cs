@@ -1,6 +1,6 @@
 ﻿namespace PracticeProject.DTOs
 {
-    public class GetAllClientsDTO
+    public class GetClientsDTO
     {
         public Guid UserId { get; set; }
         public string UserName { get; set; }

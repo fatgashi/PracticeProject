@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PracticeProject.DTOs;
 using PracticeProject.Services.Interfaces;
@@ -7,7 +8,8 @@ using PracticeProject.Services.Interfaces;
 
 namespace PracticeProject.Controllers
 {
-    [Route("api/")]
+    [Authorize(Roles = "Admin")]
+    [Route("api/users")]
     [ApiController]
     public class UserManagementController : ControllerBase
     {
@@ -18,11 +20,56 @@ namespace PracticeProject.Controllers
             _userManagementService = userManagementService;
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpGet("users")]
-        public async Task<IEnumerable<GetAllClientsDTO>> GetClients()
+        [HttpGet]
+        public async Task<IEnumerable<GetClientsDTO>> GetClients()
         {
             return await _userManagementService.GetClients();
+        }
+
+        [HttpGet("{clientId}")]
+        public async Task<IActionResult> GetClientById(Guid clientId)
+        {
+            var client = await _userManagementService.GetClientById(clientId);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(client);
+        }
+
+        [HttpPost]
+        public async Task<IdentityResult> AddClientByAdmin(ClientModel client)
+        {
+            var result = await _userManagementService.CreateUser(client);
+
+            return result;
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateClientById(Guid id, [FromBody] UpdateClientDTO updateClientDto)
+        {
+            var result = await _userManagementService.UpdateClientByIdAsync(id, updateClientDto);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteClientById(Guid id)
+        {
+            var result = await _userManagementService.DeleteClientById(id);
+
+            if (!result.Success)
+            {
+                return NotFound(result.ErrorMessage);
+            }
+
+            return NoContent();
         }
     }
 }
