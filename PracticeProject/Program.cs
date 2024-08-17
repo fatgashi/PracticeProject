@@ -32,6 +32,8 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>()
 
 builder.Services.AddScoped<IAuthenticationsService, AuthenticationsService>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -95,10 +97,11 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<User>>();
 
     try
     {
-        await Seed.SeedData(context);
+        await Seed.SeedData(context, userManager);
     }
     catch (Exception ex)
     {

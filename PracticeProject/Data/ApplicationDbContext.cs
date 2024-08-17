@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PracticeProject.Enums;
 using PracticeProject.Models;
 using System.Reflection.Emit;
 
@@ -23,10 +24,6 @@ namespace PracticeProject.Data
                 .Property(p => p.AvailableBalance)
                 .HasColumnType("decimal(18,2)");
 
-            builder.Entity<Transaction>()
-                .Property(p => p.Amount)
-                .HasColumnType("decimal(18,2)");
-
             builder.Entity<Transaction>(ms =>
             {
                 ms.HasOne(t => t.Client)
@@ -40,6 +37,12 @@ namespace PracticeProject.Data
                 .HasForeignKey(t => t.PaymentMethodId)
                 .HasConstraintName("Transaction_PaymentMethod")
                 .OnDelete(DeleteBehavior.Cascade);
+
+                ms.Property(p => p.Amount)
+                .HasColumnType("decimal(18,2)");
+
+                ms.Property(t => t.Status)
+                .HasDefaultValue(TransactionStatus.Pending);
 
             });
 

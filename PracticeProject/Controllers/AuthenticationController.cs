@@ -37,8 +37,8 @@ namespace PracticeProject.Controllers
             return user;
         }
 
-        [Authorize]
         [HttpPost("Logout")]
+        [Authorize]
         public async Task Logout()
         {
             await _authenticationsService.Logout();

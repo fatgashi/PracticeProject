@@ -8,8 +8,8 @@ using PracticeProject.Services.Interfaces;
 
 namespace PracticeProject.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Route("api/users")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class UserManagementController : ControllerBase
     {
